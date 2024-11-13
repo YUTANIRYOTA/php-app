@@ -11,6 +11,7 @@ function connectPdo()
         exit();
     }
 }
+// PDOクラスに定義されているPDO::ERRMODE_EXCEPTIONによって、エラーが発生した場合、PDOException をスローします。
 function createTodoData($todoText)
 {
     $dbh = connectPdo();
@@ -21,5 +22,30 @@ function getAllRecords()
 {
     $dbh = connectPdo();
     $sql = 'SELECT * FROM todos WHERE deleted_at IS NULL';
-    return $dbh->query($sql)->fetchAll();
+
+    $qlr = $dbh->query($sql);
+    var_dump($qlr);
+    return $qlr -> fetchAll();
 }
+function updateTodoData($post)
+{
+    $dbh = connectPdo();
+    $sql = 'UPDATE todos SET content = "' . $post['content'] . '" WHERE id = ' . $post['id'];
+    $dbh->query($sql);
+}
+function getTodoTextById($id)
+{
+    $dbh = connectPdo();
+    $sql = 'SELECT * FROM todos WHERE deleted_at IS NULL AND id = ' . $id;
+    $data = $dbh->query($sql)->fetch();
+    return $data['content'];
+}
+function deleteTodoData($id)
+{
+    $dbh = connectPdo();
+    $now = date('Y-m-d H:i:s');
+    $sql = "UPDATE todos SET deleted_at ='$now'WHERE id = $id";
+    $dbh->query($sql);
+   
+}
+// 口頭レビュー宿題修正
